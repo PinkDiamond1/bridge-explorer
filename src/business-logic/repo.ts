@@ -177,7 +177,7 @@ export default function createEventRepo(em: EntityManager<IDatabaseDriver<Connec
             event?.fromChainName?.includes(chainName.toUpperCase()) ||
             event?.fromHash?.includes(chainName) ||
             event?.toHash?.includes(chainName) ||
-            event?.collectionName?.includes(chainName) ||
+            event?.collectionName?.includes(chainName.toUpperCase()) ||
             event?.type?.includes(chainName) ||
             event?.status?.includes(chainName) ||
             event?.senderAddress?.includes(chainName) ||
