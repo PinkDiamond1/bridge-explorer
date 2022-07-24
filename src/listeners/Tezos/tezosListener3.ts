@@ -81,7 +81,7 @@ export function tezosEventListener3(
                             eventObj.senderAddress = data.data[0].sender.address;
                             eventObj.targetAddress = parameter.value?.to;
                             eventObj.contract = parameter?.value.fa2_address;
-                            eventObj.collectionName = data.data[1]?.target?.alias;
+                            eventObj.collectionName = data.data[1]?.target?.alias.toUpperCase();
                             eventObj.toChainName = chainNonceToName(parameter.value.chain_nonce.toString());
                             break;
                         }
@@ -93,7 +93,7 @@ export function tezosEventListener3(
                             eventObj.senderAddress = data.data[0].sender?.address;
                             eventObj.targetAddress = parameter.value.to;
                             eventObj.contract = target.address;
-                            eventObj.collectionName = data.data[1].target.alias;
+                            eventObj.collectionName = data.data[1].target.alias.toUpperCase();
                             eventObj.toChainName = chainNonceToName(parameter.value.chain_nonce.toString());
                             break;
                         }

@@ -46,7 +46,7 @@ export const getCollectionName = async (fromHash: string, fromChainName: string)
                 const contractInstance = await new ethers.Contract(address, abi, provider);
                 const name = await contractInstance.functions.name();
                 console.log("getCollectionData Line 49", name)
-                return name[0]
+                return name[0].toUpperCase()
             } else {
                 return undefined
             }

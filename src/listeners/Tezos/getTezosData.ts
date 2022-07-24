@@ -21,7 +21,7 @@ export const getTezosCollectionData = async (hash: string) => {
             collectionName = "WNFT";
         } else {
             contractAdd = data.data[1]?.target?.address;
-            collectionName = data.data[1]?.target?.alias;
+            collectionName = data.data[1]?.target?.alias.toUpperCase();
         }
 
         console.log("tokenId:", tokenId);

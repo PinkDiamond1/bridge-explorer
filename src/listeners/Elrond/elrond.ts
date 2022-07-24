@@ -37,7 +37,7 @@ export function elrondEventListener(
         const event = await eventFromTxn(fromHash, provider, providerRest);
 
         if (!event) return;
-        const collectionName = Base64.decode(event.evs[0].topics[0])
+        const collectionName = Base64.decode(event.evs[0].topics[0]).toUpperCase()
         console.log(collectionName)
         event.evs.length &&
             event.evs.forEach(async (e) => {

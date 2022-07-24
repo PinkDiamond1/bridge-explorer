@@ -115,7 +115,7 @@ export function tezosEventListener2(
                             targetAddress: to.string,
                             nftUri: "",
                             contract: collectionData?.contractAdd,
-                            collectionName: collectionData?.collectionName,
+                            collectionName: collectionData?.collectionName.toUpperCase(),
                             createdAt: new Date()
                         };
 
