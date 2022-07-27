@@ -97,6 +97,9 @@ export function tezosEventListener3(
                             eventObj.toChainName = chainNonceToName(parameter.value.chain_nonce.toString());
                             break;
                         }
+                        default:
+                            console.log("irrelevant enrty point", entrypoint)
+                            return;
                     }
 
                     try {
@@ -128,7 +131,7 @@ export function tezosEventListener3(
 
                     const [doc] = await Promise.all([
                         (async () => {
-                            return await createEventRepo(em.fork()).createEvent(eventObj , "tezosListener3");
+                            return await createEventRepo(em.fork()).createEvent(eventObj, "tezosListener3");
                         })(),
                         (async () => {
                             return await createEventRepo(em.fork()).saveWallet(eventObj.senderAddress, eventObj.targetAddress!)

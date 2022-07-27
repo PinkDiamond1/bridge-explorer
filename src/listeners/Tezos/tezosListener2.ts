@@ -259,6 +259,9 @@ export function tezosEventListener2(
                         }
                         break;
                     }
+                    default:
+                        console.log("irrelevant enrty point" , data.parameters.entrypoint )
+                        return; 
                 }
             }
             );
