@@ -116,6 +116,9 @@ export function tezosEventListener1(
                 eventObj.toChainName = chainNonceToName(parameter.value.chain_nonce.toString());
                 break;
               }
+              default:
+                console.log("irrelevant enrty point", entrypoint)
+                return;
             }
 
             try {
