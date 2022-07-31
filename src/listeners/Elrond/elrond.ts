@@ -9,7 +9,7 @@ import { clientAppSocket } from "../../index";
 import { Address, ProxyProvider, } from "@elrondnetwork/erdjs";
 import { IDatabaseDriver, Connection, EntityManager } from "@mikro-orm/core";
 import createEventRepo from "../../business-logic/repo";
-import { eventFromTxn, bigIntFromBeElrd, getFrozenTokenAttrs } from "./helper";
+import { eventFromTxn, bigIntFromBeElrd, getFrozenTokenAttrs , getOriginalHash } from "./helper";
 import { executedEventHandler } from "../../handlers";
 
 const elegantPair = require('elegant-pair');
@@ -109,6 +109,8 @@ export function elrondEventListener(
                     }
                 }
 
+                const orghash = await getOriginalHash(fromHash)
+
                 const eventObj: IEvent = {
                     actionId: (parseFloat(action_id) + 512).toString() ,
                     chainName: "ELROND",
@@ -117,7 +119,7 @@ export function elrondEventListener(
                     toChain: chain_nonce?.toString(),
                     fromChainName: chainNonceToName("2"),
                     toChainName: chainNonceToName(chain_nonce?.toString()) || "",
-                    fromHash,
+                    fromHash : orghash || fromHash,
                     txFees: tx_fees?.toString(),
                     type,
                     status: "Pending",
