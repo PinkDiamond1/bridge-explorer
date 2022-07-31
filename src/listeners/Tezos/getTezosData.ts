@@ -10,7 +10,7 @@ export const getTezosCollectionData = async (hash: string) => {
         let data
         for(let i= 0 ; i < 20 ; i++){
             data = await axios.get(`https://api.tzkt.io/v1/operations/${hash}`)
-            if(data){
+            if(data?.data){
                 console.log(i , "times to get tezos collection data")
                 break;
             }
