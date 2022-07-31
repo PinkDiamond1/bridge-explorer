@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import { EvResp } from "../../Intrerfaces/EvResp";
-import { AxiosError, AxiosInstance } from "axios";
+import axios, { AxiosError, AxiosInstance } from "axios";
 import { TransactionHash, ProxyProvider } from "@elrondnetwork/erdjs";
 import { TransactionWatcher } from "@elrondnetwork/erdjs/out/transactionWatcher";
 import { Erc721Attrs } from "../Elrond/elrond";
@@ -103,4 +103,14 @@ export async function eventFromTxn(
 export function bigIntFromBeElrd(buf: Uint8Array): BigNumber {
     // TODO: something better than this hack
     return new BigNumber(`0x${Buffer.from(buf).toString("hex")}`, 16);
+}
+
+export async function getOriginalHash(hash: string): Promise<string | undefined> {
+    try {
+        const res = await axios.get(`https://gateway.elrond.com/transactions/${hash}?withResults=true`)
+        console.log(res.data.data.transaction.originalTransactionHash)
+        return res.data.data.transaction.originalTransactionHash;
+    } catch (err: any) {
+        console.log("error from getOriginalHash", err.message)
+    }
 }
