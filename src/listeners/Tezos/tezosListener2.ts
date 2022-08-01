@@ -120,27 +120,15 @@ export function tezosEventListener2(
                         };
 
                         try {
-                            let [url, exchangeRate]:
-                                | PromiseSettledResult<string>[]
-                                | string[] = await Promise.allSettled([
-                                    (async () =>
-                                        fa2Address?.string &&
-                                        eventObj.tokenId &&
-                                        (await getUriFa2(fa2Address.string, eventObj.tokenId)))(),
-                                    (async () => {
-                                        const res = await axios(
-                                            `https://api.coingecko.com/api/v3/simple/price?ids=${chainId}&vs_currencies=usd`
-                                        );
-                                        return res.data[chainId].usd;
-                                    })(),
+                            let [url, exchangeRate]:| PromiseSettledResult<string>[]| string[] = await Promise.allSettled([
+                                    (async () => fa2Address?.string && eventObj.tokenId && (await getUriFa2(fa2Address.string, eventObj.tokenId)))(),
+                                    (async () => {const res = await axios(`https://api.coingecko.com/api/v3/simple/price?ids=${chainId}&vs_currencies=usd`);
+                                        return res.data[chainId].usd;})(),
                                 ]);
-                            eventObj.nftUri = url.status === "fulfilled" ? url.value : "";
-                            eventObj.dollarFees =
-                                exchangeRate.status === "fulfilled"
-                                    ? new BigNumber(ethers.utils.formatEther(eventObj.txFees))
-                                        .multipliedBy(exchangeRate.value)
-                                        .toString()
-                                    : "";
+                            eventObj.nftUri = url.status === "fulfilled" ? url.value : collectionData?.uri || "";
+                            eventObj.dollarFees =exchangeRate.status === "fulfilled"? new BigNumber(ethers.utils.formatEther(eventObj.txFees)).multipliedBy(exchangeRate.value).toString(): "";
+                        
+                        
                         } catch (e) {
                             console.log(e);
                         }
