@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import {BridgeEvent} from './Intrerfaces/IEvent'
+import { BridgeEvent } from './Intrerfaces/IEvent'
 dotenv.config();
 
 export const currency: any = {
@@ -48,6 +48,7 @@ export const txExplorers: any = {
   "18": "https://tezblock.io/transaction/",
   "23": "https://gatescan.org/tx/",
   "25": "https://explore.vechain.org/transactions/",
+  "22": "https://v1.gwscan.com/tx/"
 };
 
 export const addressExplorers: any = {
@@ -66,6 +67,7 @@ export const addressExplorers: any = {
   "18": "https://tezblock.io/account/",
   "23": "https://gatescan.org/address/",
   "25": "https://explore.vechain.org/accounts/",
+  "22": "https://v1.gwscan.com/tx/"
 };
 
 function getOrThrow(key: string): string {
@@ -87,7 +89,7 @@ export interface ChainConfig {
 
 interface Config {
   web3: ChainConfig[];
-  elrond: ChainConfig & { socket: string; api:string };
+  elrond: ChainConfig & { socket: string; api: string };
   tezos: ChainConfig & { socket: string; xpnft: string };
   algorand: ChainConfig & { indexerNode: string; apiKey: string };
   tron: ChainConfig & { apiKey: string };
@@ -194,6 +196,13 @@ const config: Config = {
       nonce: getOrThrow("VECHAIN_NONCE"),
       id: "vechain",
     },
+    {
+      name: "GODWOKEN",
+      node: getOrThrow("GODWOKEN_RPC_URL"),
+      contract: getOrThrow("GODWOKEN_MINTER_ADDRESS"),
+      nonce: getOrThrow("GODWOKEN_NONCE"),
+      id: "godwoken",
+    },
   ],
   elrond: {
     name: "ELROND",
@@ -249,8 +258,8 @@ const config: Config = {
   mail_key: getOrThrow("SENDING_BLUE"),
   captcha_secret: getOrThrow("SECRET_CAPTCHA"),
   web3socketUrl: getOrThrow("WEB3_SOCKET_URL"),
-  telegramBotToken:getOrThrow("TELEGRAM_BOT"),
-  telChatId:getOrThrow("TELEGRAM_CHAT")
+  telegramBotToken: getOrThrow("TELEGRAM_BOT"),
+  telChatId: getOrThrow("TELEGRAM_CHAT")
 };
 
 export function chainNonceToName(nonce: string) {
@@ -279,7 +288,7 @@ export const getChain = (nonce: string) => {
   }
 };
 
-export const getTelegramTemplate = (doc:BridgeEvent) => {
+export const getTelegramTemplate = (doc: BridgeEvent) => {
   return `<strong> Txn: <a href="${doc.fromChain && txExplorers[doc.fromChain] + doc.fromHash}">${doc.fromHash}</a></strong><strong> From Chain: ${doc.fromChainName}</strong><strong> TO Chain: ${doc.toChainName} , To Chain Hash:${doc.toHash ? doc.toHash : "UNKNOWN"}</strong><strong> IN PROCESSING</strong>`;
 };
 
