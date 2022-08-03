@@ -19,7 +19,8 @@ export const currency: any = {
   "23": "GT",
   "25": "VET",
   "9": "TRX",
-  "15": "ALGO"
+  "15": "ALGO",
+  "22":"CKB"
 };
 
 export const EVM_VALIDATORS = [
