@@ -107,9 +107,9 @@ export function bigIntFromBeElrd(buf: Uint8Array): BigNumber {
 
 export async function getOriginalHash(hash: string): Promise<string | undefined> {
     try {
-        const res = await axios.get(`https://gateway.elrond.com/transactions/${hash}?withResults=true`)
-        console.log(res.data.data.transaction.originalTransactionHash)
-        return res.data.data.transaction.originalTransactionHash;
+        const res = await axios.get(`https://gateway.elrond.com/transaction/${hash}?withResults=true`)
+        const orgHash = res.data?.data?.transaction?.originalTransactionHash ? res.data?.data?.transaction?.originalTransactionHash : hash;
+        return orgHash;
     } catch (err: any) {
         console.log("error from getOriginalHash", err.message)
     }
