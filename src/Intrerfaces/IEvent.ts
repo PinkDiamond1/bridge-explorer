@@ -19,6 +19,9 @@ export interface IEvent {
   nftUri?: string;
   contract?: string;
   collectionName?:string;
+  originalChainNonce?: string;
+  originalContract?: string;
+  originalTokenId?:string;
   createdAt?: Date;
 }
 
@@ -81,6 +84,15 @@ export class BridgeEvent {
   @Property({ nullable: true })
   collectionName?: string;
 
+  @Property({ nullable: true })
+  originalChainNonce?: string;
+
+  @Property({ nullable: true })
+  originalContract?: string;
+
+  @Property({ nullable: true })
+  originalTokenId?: string;
+
   @Property()
   createdAt?: Date = new Date();
 
@@ -103,6 +115,9 @@ export class BridgeEvent {
     toChainName,
     contract,
     collectionName,
+    originalChainNonce,
+    originalContract,
+    originalTokenId,
     createdAt
   }: IEvent) {
     this.actionId = actionId;
@@ -123,6 +138,9 @@ export class BridgeEvent {
     this.dollarFees = dollarFees;
     this.contract = contract;
     this.collectionName = collectionName;
+    this.originalChainNonce = originalChainNonce;
+    this.originalContract = originalContract;
+    this.originalTokenId = originalTokenId;
     this.createdAt = createdAt;
   }
 }
