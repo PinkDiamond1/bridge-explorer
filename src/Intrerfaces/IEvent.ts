@@ -18,10 +18,10 @@ export interface IEvent {
   targetAddress?: string;
   nftUri?: string;
   contract?: string;
-  collectionName?:string;
-  originalChainNonce?: string;
-  originalContract?: string;
-  originalTokenId?:string;
+  collectionName?: string;
+  originalChainNonce?: string | null;
+  originalContract?: string | null;
+  originalTokenId?: string | null;
   createdAt?: Date;
 }
 
@@ -85,13 +85,13 @@ export class BridgeEvent {
   collectionName?: string;
 
   @Property({ nullable: true })
-  originalChainNonce?: string;
+  originalChainNonce?: string | null;
 
   @Property({ nullable: true })
-  originalContract?: string;
+  originalContract?: string | null;
 
   @Property({ nullable: true })
-  originalTokenId?: string;
+  originalTokenId?: string | null;
 
   @Property()
   createdAt?: Date = new Date();

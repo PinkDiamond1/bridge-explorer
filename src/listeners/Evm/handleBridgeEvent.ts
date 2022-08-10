@@ -3,6 +3,7 @@ import IndexUpdater from '../../services/indexUpdater'
 import { chainNonceToName } from '../../config'
 import { IEventhandler } from '../../handlers/index'
 import { getCollectionName, getContractAddress } from "./getCollectionData"
+import { updateUnfreezTrxs } from "../../services/getUnfreezeUriData"
 import config from '../../config'
 
 export const handleBridgeEvent = async ({
@@ -52,6 +53,12 @@ export const handleBridgeEvent = async ({
                 )
             })()
         ])
+
+        let originalData;
+        if (type === "Unfreeze") {
+            originalData = await updateUnfreezTrxs([{ nftUri, fromHash }])
+        }
+
         console.log("--------------TRXDATA-----------:", trxData)
         const res: IEventhandler = {
             actionId,
@@ -65,7 +72,10 @@ export const handleBridgeEvent = async ({
             txFees: txFees?.toString() || '',
             uri: nftUri || '',
             contract: trxData.status === 'fulfilled' ? trxData.value.contractAdd : undefined,
-            collectionName: trxData.status === 'fulfilled' ? trxData.value.collName : undefined
+            collectionName: trxData.status === 'fulfilled' ? trxData.value.collName : undefined,
+            originalChainNonce: originalData?.originalChainNonce || null,
+            originalContract: originalData?.originalContract || null,
+            originalTokenId: originalData?.originalTokenId || null,
         }
         console.log("evm.ts line 75", res)
         return res

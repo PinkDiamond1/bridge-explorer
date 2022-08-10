@@ -26,6 +26,9 @@ export interface IEventhandler {
   dollarFees?: string;
   createdAt?: Date
   collectionName?: string
+  originalChainNonce?: string | undefined | null;
+  originalContract?: string | undefined | null;
+  originalTokenId?: string | undefined | null;
 }
 
 interface HanderOptions {
@@ -34,18 +37,18 @@ interface HanderOptions {
 
 const evmChainNumbers = config.web3.map((c) => c.nonce);
 
-const getExchageRate = async () =>{
-  try{
-   const exchangeRate =  await axios('https://xp-exchange-rates.herokuapp.com/exchange/batch_data')
-  return exchangeRate ? exchangeRate.data : ""
-  }catch(err){
+const getExchageRate = async () => {
+  try {
+    const exchangeRate = await axios('https://xp-exchange-rates.herokuapp.com/exchange/batch_data')
+    return exchangeRate ? exchangeRate.data : ""
+  } catch (err) {
     console.log(err)
   }
-} 
+}
 
 export const calcDollarFees = (txFees: any, exchangeRate: number, fromChain: string) => {
-  console.log("exchangeRate:" , exchangeRate)
-  if(exchangeRate === undefined){
+  console.log("exchangeRate:", exchangeRate)
+  if (exchangeRate === undefined) {
     return "1"
   }
   if (fromChain === config.algorand.nonce) {
@@ -70,7 +73,7 @@ cron.schedule('*/3 * * * *', async () => {
   exchangeRates = (await getExchageRate())
 })
 
-export const executedEventHandler = (em: EntityManager<IDatabaseDriver<Connection>>,chain: string
+export const executedEventHandler = (em: EntityManager<IDatabaseDriver<Connection>>, chain: string
 ) => async ({
   fromChain,
   toChain,
@@ -93,7 +96,7 @@ export const executedEventHandler = (em: EntityManager<IDatabaseDriver<Connectio
       "index.ts - line 84 tx_executed_event"
     );
 
-    const isToChainEvm = evmChainNumbers.includes(String(toChain)) && toChain !== 25 && toChain !== 22 && toChain !== 14? true : false
+    const isToChainEvm = evmChainNumbers.includes(String(toChain)) && toChain !== 25 && toChain !== 22 && toChain !== 14 ? true : false
 
     const chainData = isToChainEvm && getChain(String(toChain))
     const provider = chainData && new ethers.providers.JsonRpcProvider(chainData?.node);
@@ -158,7 +161,8 @@ export const eventHandler = (em: EntityManager<IDatabaseDriver<Connection>>,) =>
   uri,
   contract,
   createdAt,
-  collectionName
+  collectionName,
+  originalContract, originalTokenId, originalChainNonce
 }: IEventhandler, options?: HanderOptions) => {
 
   const event: IEvent = {
@@ -179,7 +183,8 @@ export const eventHandler = (em: EntityManager<IDatabaseDriver<Connection>>,) =>
     contract,
     dollarFees: exchangeRates ? calcDollarFees(txFees, exchangeRates[currency[from]], from) : '',
     createdAt: createdAt ? createdAt : moment().utcOffset(0).toDate(),
-    collectionName
+    collectionName,
+    originalContract, originalTokenId, originalChainNonce
   };
   console.log("index.ts line 176", event)
   const [doc] = await Promise.all([
@@ -204,7 +209,7 @@ export const eventHandler = (em: EntityManager<IDatabaseDriver<Connection>>,) =>
       if (updated) {
         try {
           console.log("before telegram operation")
-         await axios.get(`https://api.telegram.org/bot5524815525:AAEEoaLVnMigELR-dl01hgHzwSkbonM1Cxc/sendMessage?chat_id=-553970779&text=${getTelegramTemplate(doc)}&parse_mode=HTML`);
+          await axios.get(`https://api.telegram.org/bot5524815525:AAEEoaLVnMigELR-dl01hgHzwSkbonM1Cxc/sendMessage?chat_id=-553970779&text=${getTelegramTemplate(doc)}&parse_mode=HTML`);
         } catch (err) {
           console.log(err)
         }
